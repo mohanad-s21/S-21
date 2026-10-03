@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>عيد ميلاد سعيد يا سلومة</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#160b24;--bg2:#2f1648;--ink:#f8eeff;--mute:#bda7d8;--rose:#ff7fa8;--gold:#ffc58a;--card:rgba(255,255,255,.08);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff1f6;--bg2:#ffd6e6;--ink:#3b1247;--mute:#7e5a90;--rose:#e0457c;--gold:#cf7a24;--card:rgba(59,18,71,.07)}}
+:root[data-theme="dark"]{--bg:#160b24;--bg2:#2f1648}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(120% 80% at 50% 0%,var(--bg2),var(--bg) 70%) var(--bg);color:var(--ink);font-family:Tajawal,system-ui,sans-serif;line-height:1.8;overflow-x:hidden}
+h1,h2,.big,.say{font-family:'Aref Ruqaa',Georgia,serif;font-weight:700;margin:0}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#bg{z-index:0}#fx{z-index:20}
+main,#gate{position:relative;z-index:2}
+/* gate */
+#gate{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);transition:opacity 1s,visibility 1s;text-align:center;padding:20px}
+#gate.go{opacity:0;visibility:hidden}
+#gate h1{font-size:clamp(1.8rem,7vw,2.6rem);color:var(--gold)}
+.gift{background:none;border:0;padding:0;cursor:pointer;width:190px;color:inherit;animation:bob 2.4s ease-in-out infinite}
+.gift:focus-visible,.btn:focus-visible,.cake:focus-visible{outline:3px solid var(--gold);outline-offset:6px;border-radius:14px}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.lid{transform-origin:20% 100%;transition:transform .7s cubic-bezier(.3,1.6,.5,1)}
+.go .lid,.open .lid{transform:translate(18px,-46px) rotate(24deg)}
+.go .gift{animation:none}
+.hint{color:var(--mute);font-size:.95rem;margin:0}
+/* sections */
+section{max-width:620px;margin:0 auto;padding:64px 22px;text-align:center;min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.name{font-size:clamp(2.2rem,9vw,3.4rem);color:var(--gold)}
+.big{font-size:clamp(8rem,42vw,14rem);line-height:1;background:linear-gradient(160deg,var(--gold),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
+.cur::after{content:"|";margin-inline-start:2px;color:var(--rose);animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+h2{font-size:1.9rem;margin-bottom:12px}
+/* candle */
+.cake{margin:18px auto 4px;width:210px;cursor:pointer;background:none;border:0;padding:0;color:inherit}
+.flame{transform-origin:50% 100%;animation:fl 1.3s ease-in-out infinite;transition:opacity .4s,transform .4s}
+.out .flame{opacity:0;transform:scale(.2);animation:none}
+@keyframes fl{0%,100%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.92,1.12) rotate(2deg)}}
+#wish{opacity:0;max-height:0;overflow:hidden;transition:opacity .8s,max-height .8s;font-family:'Aref Ruqaa',Georgia,serif;font-size:1.5rem;color:var(--gold)}
+.out #wish{opacity:1;max-height:140px;margin-top:12px}
+/* words */
+.say{font-size:clamp(1.5rem,6vw,2.1rem);line-height:1.9;margin:10px 0;opacity:0;transform:translateY(24px);filter:blur(6px);transition:opacity 1.1s,transform 1.1s,filter 1.1s}
+.say.in{opacity:1;transform:none;filter:none}
+.say:nth-of-type(3){color:var(--rose)}
+.sign{margin-top:24px;color:var(--gold);font-family:'Aref Ruqaa',serif;font-size:1.4rem;opacity:0;transition:opacity 1.4s .6s}
+.sign.in{opacity:1}
+.btn{margin-top:26px;background:var(--rose);color:#2a0a1a;border:0;border-radius:999px;padding:14px 30px;font:700 1.05rem Tajawal,system-ui,sans-serif;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.95)}
+.balloon{position:fixed;bottom:-120px;width:46px;height:58px;border-radius:50% 50% 48% 48%;z-index:1;opacity:.85;animation:up linear forwards;pointer-events:none}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:40px;background:var(--mute)}
+@keyframes up{to{transform:translateY(-130vh) translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.gift,.flame,.cur::after{animation:none}.say{transition:none;opacity:1;transform:none;filter:none}.sign{opacity:1}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div id="gate">
+  <h1>في هدية إلكِ يا سلومة</h1>
+  <button class="gift" id="gift" aria-label="افتحي الهدية">
+    <svg viewBox="0 0 200 190" aria-hidden="true">
+      <rect x="25" y="85" width="150" height="95" rx="10" fill="#c8527d"/>
+      <rect x="92" y="85" width="16" height="95" fill="#ffc58a"/>
+      <g class="lid"><rect x="15" y="55" width="170" height="38" rx="10" fill="#ff7fa8"/><rect x="92" y="55" width="16" height="38" fill="#ffc58a"/>
+      <path d="M100 55c-30-34-52-8-24 0zM100 55c30-34 52-8 24 0z" fill="none" stroke="#ffc58a" stroke-width="9" stroke-linecap="round"/></g>
+    </svg>
+  </button>
+  <p class="hint">اضغطي لتفتحيها</p>
+</div>
+
+<main>
+  <section>
+    <p class="hint">٣ تشرين الأول</p>
+    <h1 class="name"><span id="typed" class="cur"></span></h1>
+    <div class="big" id="num" aria-label="21">0</div>
+  </section>
+
+  <section>
+    <h2>تمنّي أمنية</h2>
+    <div id="cakeWrap">
+      <button class="cake" id="cake" aria-label="طفّي الشمعة">
+        <svg viewBox="0 0 200 190" aria-hidden="true">
+          <g class="flame"><path d="M100 14c14 18 16 30 0 44-16-14-14-26 0-44z" fill="#ffb347"/><path d="M100 30c7 9 8 16 0 24-8-8-7-15 0-24z" fill="#fff0b8"/></g>
+          <rect x="95" y="56" width="10" height="40" rx="3" fill="#ffe6f0"/>
+          <rect x="30" y="96" width="140" height="44" rx="12" fill="#ff7fa8"/>
+          <path d="M30 112q14 14 28 0t28 0 28 0 28 0 28 0v-6H30z" fill="#ffe6f0"/>
+          <rect x="14" y="140" width="172" height="40" rx="12" fill="#c8527d"/>
+          <circle cx="60" cy="160" r="5" fill="#ffc58a"/><circle cx="100" cy="160" r="5" fill="#ffc58a"/><circle cx="140" cy="160" r="5" fill="#ffc58a"/>
+        </svg>
+      </button>
+      <p class="hint" id="hint">اضغطي على الشمعة لتطفيها</p>
+      <div id="wish">الله يحققلك كل شي بتتمنّيه</div>
+    </div>
+  </section>
+
+  <section id="words">
+    <p class="say">٢١ سنة، وكل سنة بتصير أحلى.</p>
+    <p class="say">في ناس وجودهم بيفرق… وإنتِ منهم.</p>
+    <p class="say">إعجابي فيكِ كبير، ومحبّتي إلكِ أكبر.</p>
+    <p class="say">كل عام وإنتِ بخير يا سلومة.</p>
+    <p class="sign">مهند</p>
+    <button class="btn" id="hearts">اضغطي هون 💗</button>
+  </section>
+</main>
+
+<script>
+(function(){
+var dpr=Math.min(devicePixelRatio||1,2),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var bg=document.getElementById('bg'),bx=bg.getContext('2d'),fx=document.getElementById('fx'),fc=fx.getContext('2d');
+var stars=[];
+function size(){bg.width=fx.width=innerWidth*dpr;bg.height=fx.height=innerHeight*dpr;stars=[];for(var i=0;i<70;i++)stars.push({x:Math.random()*bg.width,y:Math.random()*bg.height,r:(Math.random()*1.6+.4)*dpr,p:Math.random()*6,s:Math.random()*.02+.005})}
+size();addEventListener('resize',size);
+function sky(){bx.clearRect(0,0,bg.width,bg.height);stars.forEach(function(s){s.p+=s.s;bx.globalAlpha=.25+.55*Math.abs(Math.sin(s.p));bx.fillStyle='#ffd9ec';bx.beginPath();bx.arc(s.x,s.y,s.r,0,7);bx.fill();s.y-=.08*dpr;if(s.y<0)s.y=bg.height});if(!RM)requestAnimationFrame(sky)}
+sky();
+var P=[],run=false,cols=['#ff7fa8','#ffc58a','#f8eeff','#c58bff','#ff5c8a'];
+function burst(n,txt){for(var k=0;k<n;k++)P.push({x:fx.width/2,y:fx.height*.5,vx:(Math.random()-.5)*16*dpr,vy:(-Math.random()*14-4)*dpr,s:(Math.random()*6+4)*dpr,c:cols[k%5],a:Math.random()*6,l:1,t:txt});if(!run){run=true;tick()}}
+function tick(){fc.clearRect(0,0,fx.width,fx.height);P=P.filter(function(q){return q.l>0});P.forEach(function(q){q.x+=q.vx;q.y+=q.vy;q.vy+=.35*dpr;q.a+=.2;q.l-=.008;fc.globalAlpha=Math.max(q.l,0);fc.save();fc.translate(q.x,q.y);fc.rotate(q.a);if(q.t){fc.font=(q.s*3)+'px serif';fc.fillText(q.t,0,0)}else{fc.fillStyle=q.c;fc.fillRect(-q.s/2,-q.s/4,q.s,q.s/2)}fc.restore()});if(P.length)requestAnimationFrame(tick);else{run=false;fc.clearRect(0,0,fx.width,fx.height)}}
+function balloons(){var c=['#ff7fa8','#ffc58a','#c58bff','#ff5c8a','#8fd3ff'];for(var i=0;i<9;i++){var b=document.createElement('div');b.className='balloon';b.style.left=(5+Math.random()*88)+'vw';b.style.background=c[i%5];b.style.setProperty('--dx',(Math.random()*60-30)+'px');b.style.animationDuration=(9+Math.random()*7)+'s';b.style.animationDelay=(Math.random()*2.5)+'s';document.body.appendChild(b);setTimeout(function(e){e.remove()},20000,b)}}
+/* open gate */
+var opened=false;
+function openGift(){if(opened)return;opened=true;var g=document.getElementById('gate');g.classList.add('go');if(!RM){burst(160);balloons()}
+ setTimeout(function(){type('سلومة… ٢١ مبروك')},900);setTimeout(count,1300)}
+document.getElementById('gift').onclick=openGift;
+function type(t){var el=document.getElementById('typed'),i=0;(function s(){el.textContent=t.slice(0,i++);if(i<=t.length)setTimeout(s,RM?0:90)})()}
+function count(){var el=document.getElementById('num'),n=0;var t=setInterval(function(){n++;el.textContent=n;if(n>=21){clearInterval(t);if(!RM)burst(60)}},RM?0:70)}
+/* candle */
+var wrap=document.getElementById('cakeWrap');
+document.getElementById('cake').onclick=function(){if(!wrap.classList.contains('out')){wrap.classList.add('out');document.getElementById('hint').textContent='انطفت! كل عام وإنتِ بخير';if(!RM)burst(120)}};
+/* reveal words one by one */
+var says=[].slice.call(document.querySelectorAll('.say')),sign=document.querySelector('.sign');
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!e.target.dataset.d){e.target.dataset.d=1;var i=says.indexOf(e.target);setTimeout(function(){e.target.classList.add('in');if(i==says.length-1)sign.classList.add('in')},RM?0:i*1100)}})},{threshold:.35});
+says.forEach(function(s){io.observe(s)});
+document.getElementById('words').addEventListener('click',function(e){if(e.target.id==='hearts'&&!RM)burst(70,'💗')});
+document.getElementById('hearts').addEventListener('click',function(){if(RM){this.textContent='💗'}});
+})();
+</script>
+</body>
+</html>
